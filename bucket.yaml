@@ -18,6 +18,24 @@ Resources:
       VersioningConfiguration:
         Status: Enabled
 
+  BucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: ForceSSLOnly
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:*'
+            Resource: 
+              - !Sub '${S3Bucket.Arn}'
+              - !Sub '${S3Bucket.Arn}/*'
+            Condition:
+              Bool:
+                aws:SecureTransport: false
+
 Outputs:
   BucketName:
     Description: Name of the created S3 bucket
